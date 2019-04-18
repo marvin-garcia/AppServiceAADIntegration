@@ -1,0 +1,42 @@
+name: backend
+replicaCount: 2
+
+deployment:
+  name: backend-deploy
+
+image:
+  name: backend-api
+  repository: txtaksworkshopacr.azurecr.io/aksworkshop/backend-api
+  tag: 1
+  pullPolicy: Always
+
+probes:
+  liveness:
+    port: 80
+    endpoint: /swagger/index.html
+  readiness:
+    port: 80
+    endpoint: /swagger/index.html
+
+container:
+  port: 80
+
+resources: 
+  requests:
+   cpu: 100m
+   memory: 128Mi
+  limits:
+   cpu: 500m
+   memory: 256Mi
+
+env:
+  mongoconnectionstring: mongodb://user:Passw0rd!@todolist-mongodb.default.svc.cluster.local:27017/todoitems
+  mongodatabase: todoitems
+  mongocollection: todolist
+  appinsightskey: 6262882b-1290-43ad-bb48-ff3fb3115058
+
+service:
+  name: backend-svc
+  type: ClusterIP
+  port: 80
+  targetport: 80

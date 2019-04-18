@@ -1,0 +1,43 @@
+name: frontend
+replicaCount: 2
+
+deployment:
+  name: frontend-deploy
+
+image:
+  name: frontend-api
+  repository: txtaksworkshopacr.azurecr.io/aksworkshop/frontend-api
+  tag: 1
+  pullPolicy: Always
+
+probes:
+  liveness:
+    port: 80
+    endpoint: /swagger/index.html
+  readiness:
+    port: 80
+    endpoint: /swagger/index.html
+
+container:
+  port: 80
+
+resources: 
+  requests:
+   cpu: 100m
+   memory: 128Mi
+  limits:
+   cpu: 500m
+   memory: 256Mi
+
+env:
+  backendurl: http://backend-svc.default.svc.cluster.local
+  appinsightskey: 6262882b-1290-43ad-bb48-ff3fb3115058
+
+service:
+  name: frontend-svc
+  type: ClusterIP
+  port: 80
+  targetport: 80
+
+ingress:
+  name: frontend-ingress
