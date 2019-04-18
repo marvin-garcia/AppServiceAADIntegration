@@ -3,25 +3,20 @@ using System.Linq;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using BackendApi.Models;
+using BackendApi.Interfaces;
 
-namespace BackendApi.Models
+namespace BackendApi.Repositories
 {
-    public interface IMongoDbRepository
+    public class MongoDbRepository : IDbContext
     {
-        List<TodoItem> Get();
-        TodoItem Get(string id);
-        TodoItem Create(TodoItem item);
-        void Update(string id, TodoItem itemIn);
-        void Remove(TodoItem itemIn);
-        void Remove(string id);
-    }
-
-    public class MongoDbRepository : IMongoDbRepository
-    {
+        private readonly string _contextType;
         private readonly IMongoCollection<TodoItem> _items;
 
         public MongoDbRepository(IConfiguration configuration)
         {
+            this._contextType = "MongoDB";
+
             string connectionString = configuration["mongodb"];
             if (string.IsNullOrEmpty(connectionString))
                 throw new Exception("Could not find database connection string.");
@@ -43,6 +38,11 @@ namespace BackendApi.Models
         {
             string guid = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 24);
             return guid;
+        }
+
+        public string GetDbContextType()
+        {
+            return this._contextType;
         }
 
         public List<TodoItem> Get()

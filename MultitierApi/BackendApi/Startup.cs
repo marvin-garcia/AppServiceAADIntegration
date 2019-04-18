@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using BackendApi.Models;
+using BackendApi.Interfaces;
+using BackendApi.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendApi
 {
@@ -33,7 +36,25 @@ namespace BackendApi
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IConfiguration>(Configuration);
-            services.AddSingleton<IMongoDbRepository>(new MongoDbRepository(Configuration));
+
+            // Choose either MongoDB or in-memory DB based on whether the connection string exists in the app settings
+            string mongoConnectionString = Configuration["mongodb"];
+
+            // Use in-memory DB
+            if (string.IsNullOrEmpty(mongoConnectionString))
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<InMemoryDbRepository>();
+                optionsBuilder.UseInMemoryDatabase("TodoList");
+                var dbContext = new InMemoryDbRepository(optionsBuilder.Options);
+
+                services.AddSingleton<IDbContext>(dbContext);
+            }
+            // Use MongoDB
+            else
+            {
+                services.AddSingleton<IDbContext>(new MongoDbRepository(Configuration));
+            }
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             
             // Register the Swagger generator, defining one or more Swagger documents

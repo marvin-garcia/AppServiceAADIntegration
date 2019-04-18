@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendApi.Interfaces;
 using BackendApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,15 +13,15 @@ namespace BackendApi.Controllers
     [ApiController]
     public class TodoController : Controller
     {
-        private readonly IMongoDbRepository _mongodb;
+        private readonly IDbContext _dbContext;
 
-        public TodoController(IMongoDbRepository mongoDbRepository)
+        public TodoController(IDbContext dbRepository)
         {
             try
             {
-                _mongodb = mongoDbRepository;
-                if (_mongodb.Get().Count() == 0)
-                    _mongodb.Create(new TodoItem()
+                _dbContext = dbRepository;
+                if (_dbContext.Get().Count() == 0)
+                    _dbContext.Create(new TodoItem()
                     {
                         Name = "Item1",
                         IsComplete = false,
@@ -37,7 +38,7 @@ namespace BackendApi.Controllers
         {
             try
             {
-                return _mongodb.Get();
+                return _dbContext.Get();
             }
             catch (Exception e)
             {
@@ -50,7 +51,7 @@ namespace BackendApi.Controllers
         {
             try
             {
-                var item = _mongodb.Get(id);
+                var item = _dbContext.Get(id);
                 if (item == null)
                     return NotFound();
 
@@ -70,7 +71,7 @@ namespace BackendApi.Controllers
                 if (item == null)
                     return BadRequest();
 
-                _mongodb.Create(item);
+                _dbContext.Create(item);
                 return CreatedAtRoute("GetTodo", new { id = item.Id }, item);
             }
             catch (Exception e)
@@ -87,14 +88,14 @@ namespace BackendApi.Controllers
                 if (item == null || item.Id != id)
                     return BadRequest();
 
-                var todo = _mongodb.Get(id);
+                var todo = _dbContext.Get(id);
                 if (todo == null)
                     return NotFound();
 
                 todo.IsComplete = item.IsComplete;
                 todo.Name = item.Name;
 
-                _mongodb.Update(id, todo);
+                _dbContext.Update(id, todo);
                 return new NoContentResult();
             }
             catch (Exception e)
@@ -108,17 +109,23 @@ namespace BackendApi.Controllers
         {
             try
             {
-                var todo = _mongodb.Get(id);
+                var todo = _dbContext.Get(id);
                 if (todo == null)
                     return NotFound();
 
-                _mongodb.Remove(id);
+                _dbContext.Remove(id);
                 return new NoContentResult();
             }
             catch (Exception e)
             {
                 throw e;
             }
+        }
+
+        [HttpGet("DbContextType")]
+        public string GetDbContextType()
+        {
+            return _dbContext.GetDbContextType();
         }
     }
 }
