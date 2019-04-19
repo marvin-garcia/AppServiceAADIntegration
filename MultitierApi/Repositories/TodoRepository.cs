@@ -4,18 +4,10 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using FrontendApi.Models;
+using FrontendApi.Interfaces;
 
 namespace FrontendApi.Repositories
 {
-    public interface ITodoRepository
-    {
-        Task<IEnumerable<TodoItem>> GetAll();
-        Task<TodoItem> Get(string id);
-        Task<TodoItem> Create(TodoItem item);
-        Task Update(string id, TodoItem itemIn);
-        Task Remove(string id);
-    }
-
     public class TodoRepository : ITodoRepository
     {
         private string _backendUrl { get; set; }

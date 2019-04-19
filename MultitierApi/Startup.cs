@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using System;
-using Microsoft.AspNetCore.Http;
+using FrontendApi.Services;
+using FrontendApi.Interfaces;
 using FrontendApi.Repositories;
 
 namespace FrontendApi

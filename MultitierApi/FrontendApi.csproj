@@ -6,6 +6,7 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <ApplicationInsightsResourceId>/subscriptions/f0cf2edb-86a7-44b6-9c02-9c5fee5c618d/resourcegroups/AksWorkshop/providers/microsoft.insights/components/AksWorkshopAppInsights</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/f0cf2edb-86a7-44b6-9c02-9c5fee5c618d/resourcegroups/AksWorkshop/providers/microsoft.insights/components/AksWorkshopAppInsights</ApplicationInsightsAnnotationResourceId>
+    <UserSecretsId>a7e54a83-628b-4b46-8e2c-24b754ca7b39</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,8 @@
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.9" /> 
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" /> 
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" /> 
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.10" /> 
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 

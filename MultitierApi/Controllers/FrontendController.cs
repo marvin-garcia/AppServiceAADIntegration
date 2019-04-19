@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using FrontendApi.Repositories;
 using FrontendApi.Models;
-using System;
+using FrontendApi.Interfaces;
 
 namespace FrontendApi.Controllers
 {

@@ -5,21 +5,14 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using FrontendApi.Interfaces;
 
-namespace FrontendApi
+namespace FrontendApi.Services
 {
-    public interface IHttpClient
-    {
-        Task<string> GetStringAsync(string uri);
-        Task<HttpResponseMessage> PostAsync<T>(string uri, T item, string requestId = null);
-        Task<HttpResponseMessage> DeleteAsync(string uri, string requestId = null);
-        Task<HttpResponseMessage> PutAsync<T>(string uri, T item, string requestId = null);
-    }
-
     public class StandardHttpClient : IHttpClient
     {
-        private HttpClient _client;
-        private ILogger<StandardHttpClient> _logger;
+        private readonly HttpClient _client;
+        private readonly ILogger<StandardHttpClient> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public StandardHttpClient(ILogger<StandardHttpClient> logger, IHttpContextAccessor httpContextAccessor)
@@ -27,6 +20,12 @@ namespace FrontendApi
             _client = new HttpClient();
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<HttpResponseMessage> GetAsync(string uri)
+        {
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+            return await _client.SendAsync(requestMessage);
         }
 
         public async Task<string> GetStringAsync(string uri)
