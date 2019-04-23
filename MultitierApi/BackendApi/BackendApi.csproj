@@ -6,6 +6,7 @@
     <DockerComposeProjectPath>..\MultitierApi\docker-compose.dcproj</DockerComposeProjectPath>
     <ApplicationInsightsResourceId>/subscriptions/f0cf2edb-86a7-44b6-9c02-9c5fee5c618d/resourcegroups/AksWorkshop/providers/microsoft.insights/components/AksWorkshopAppInsights</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/f0cf2edb-86a7-44b6-9c02-9c5fee5c618d/resourcegroups/AksWorkshop/providers/microsoft.insights/components/AksWorkshopAppInsights</ApplicationInsightsAnnotationResourceId>
+    <UserSecretsId>cf4c8cad-92d7-4f53-b266-0003514dab89</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

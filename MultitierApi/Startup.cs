@@ -8,7 +8,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FrontendApi.Services;
 using FrontendApi.Interfaces;
-using FrontendApi.Repositories;
 
 namespace FrontendApi
 {
@@ -26,7 +25,6 @@ namespace FrontendApi
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IHttpClient, StandardHttpClient>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<ITodoRepository, TodoRepository>();
             services.AddMvc(); //.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Register the Swagger generator, defining one or more Swagger documents

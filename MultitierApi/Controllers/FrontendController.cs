@@ -1,20 +1,26 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using FrontendApi.Models;
+using System.Net.Http;
+using System.Threading.Tasks;
 using FrontendApi.Interfaces;
+using FrontendApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace FrontendApi.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class FrontendController : Controller
     {
-        private ITodoRepository _todo { get; set; }
+        private IHttpClient _httpClient;
+        private string _backendUrl;
 
-        public FrontendController(ITodoRepository todoRepository)
+        public FrontendController(IConfiguration configuration, IHttpClient httpClient)
         {
-            _todo = todoRepository;
+            _httpClient = httpClient;
+            _backendUrl = $"{configuration["backendurl"]}/api/todo";
         }
 
         [HttpGet]
@@ -22,7 +28,8 @@ namespace FrontendApi.Controllers
         {
             try
             {
-                var items = await _todo.GetAll();
+                var response = await _httpClient.GetStringAsync($"{_backendUrl}");
+                var items = JsonConvert.DeserializeObject<IEnumerable<TodoItem>>(response);
                 return items;
             }
             catch (Exception e)
@@ -36,10 +43,8 @@ namespace FrontendApi.Controllers
         {
             try
             {
-                var item = await _todo.Get(id);
-
-                if (item == null)
-                    return NotFound();
+                var response = await _httpClient.GetStringAsync($"{_backendUrl}/{id}");
+                var item = JsonConvert.DeserializeObject<TodoItem>(response);
 
                 return new ObjectResult(item);
             }
@@ -48,19 +53,18 @@ namespace FrontendApi.Controllers
                 throw e;
             }
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TodoItem item)
         {
             try
             {
-                if (item == null)
-                    return BadRequest();
+                var response = await _httpClient.PostAsync<TodoItem>(_backendUrl, item);
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception(response.ReasonPhrase);
 
-                var itemOut = await _todo.Create(item);
-
-                //return CreatedAtRoute("GetTodo", new { id = item.Id }, itemOut);
-                return await GetById(itemOut.Id);
+                var itemOut = JsonConvert.DeserializeObject<TodoItem>(await response.Content.ReadAsStringAsync());
+                return new ObjectResult(itemOut);
             }
             catch (Exception e)
             {
@@ -73,17 +77,11 @@ namespace FrontendApi.Controllers
         {
             try
             {
-                if (item == null || item.Id != id)
-                    return BadRequest();
+                //var content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync<TodoItem>($"{_backendUrl}/{id}", item);
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception(response.ReasonPhrase);
 
-                var todo = await _todo.Get(id);
-                if (todo == null)
-                    return NotFound();
-
-                todo.IsComplete = item.IsComplete;
-                todo.Name = item.Name;
-
-                await _todo.Update(id, todo);
                 return new NoContentResult();
             }
             catch (Exception e)
@@ -97,11 +95,10 @@ namespace FrontendApi.Controllers
         {
             try
             {
-                var todo = await _todo.Get(id);
-                if (todo == null)
-                    return NotFound();
+                var response = await _httpClient.DeleteAsync($"{_backendUrl}/{id}");
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception(response.ReasonPhrase);
 
-                await _todo.Remove(id);
                 return new NoContentResult();
             }
             catch (Exception e)
@@ -111,4 +108,3 @@ namespace FrontendApi.Controllers
         }
     }
 }
-
