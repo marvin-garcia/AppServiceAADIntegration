@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FrontendApi.Interfaces;
 using FrontendApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -21,6 +22,12 @@ namespace FrontendApi.Controllers
         {
             _httpClient = httpClient;
             _backendUrl = $"{configuration["backendurl"]}/api/todo";
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
+            _httpClient.SetAuthenticationHeader("Bearer", Request.Headers["X-MS-TOKEN-AAD-ACCESS-TOKEN"]);
         }
 
         [HttpGet]

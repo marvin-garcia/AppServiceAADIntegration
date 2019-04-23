@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using FrontendApi.Interfaces;
+using System.Net.Http.Headers;
 
 namespace FrontendApi.Services
 {
@@ -20,6 +21,12 @@ namespace FrontendApi.Services
             _client = new HttpClient();
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public void SetAuthenticationHeader(string scheme, string accessToken)
+        {
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, accessToken);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string uri)

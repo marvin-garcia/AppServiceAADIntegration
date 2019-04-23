@@ -5,6 +5,7 @@ namespace FrontendApi.Interfaces
 {
     public interface IHttpClient
     {
+        void SetAuthenticationHeader(string scheme, string accessToken);
         Task<HttpResponseMessage> GetAsync(string url);
         Task<string> GetStringAsync(string uri);
         Task<HttpResponseMessage> PostAsync<T>(string uri, T item, string requestId = null);
