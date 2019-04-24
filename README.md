@@ -62,3 +62,19 @@ Select **App Service** as the publish target and choose the **existing** option 
 
 After a few seconds the app will be published to your web app and it will open the website on your browser, the request will take you to the Frontend API Home page. If the connectivity with the Backend API works, you should see at least one item listed below the bar. Use the Home page to add, edit and delete a few items from the list.
 
+![image](images/frontend-home-page.png)
+
+> ![NOTE]
+    > At this point you have successfully published both APIs and configured them to work together. The next step is to secure both APIs by integrating them with Azure AD.
+
+# Integrate App Service with Azure Active Directory
+Because App Service provides built-in authentication and authorization support, you can sign-in users with minimal or no code changes to your application. The way it works is that every request to your web app reaches tothe authentication and authorization module first and it is responsible for token management, and user authentication. If needed, you can ask for these tokens and claims to be exposed to your code so you can do other things like integrating with Microsoft Graph API. App Service also allows you to authenticate against different providers, you can choose between Azure AD, Google, Facebook, etc. You can read more about it in details [here](https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization). 
+
+## Register AD App for backend API
+In order to enable sign-in in your web app through Azure AD, you first need to register a new App with an Azure Active Directory. In your Azure portal go to **Azure Active Directory** > **App registrations (Preview)** > **New registration**.
+
+- Assign a distinctive name to your app that relates it to the Backend API easily.
+- Select **Accounts in this organizational directory only (Microsoft)** in the account type.
+- Add the Url ```http://<site-name>.azurewebsites.net/.auth/login/aad/callback``` as one of the **Redirect URI**. Make sure to replace ```<site-name>``` with your backend API web app name.
+- Finish the process by registering the app.
+
