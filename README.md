@@ -73,8 +73,29 @@ Because App Service provides built-in authentication and authorization support, 
 ## Register AD App for backend API
 In order to enable sign-in in your web app through Azure AD, you first need to register a new App with an Azure Active Directory. In your Azure portal go to **Azure Active Directory** > **App registrations (Preview)** > **New registration**.
 
+>![NOTE]
+    > Keep in mind that an Azure website can use a different Azure tenant than the one it lives in. In this exercise we won't make any assumptions and will configure the app services as if they live in different tenants, but the steps are relatively the same.
+
 - Assign a distinctive name to your app that relates it to the Backend API easily.
 - Select **Accounts in this organizational directory only (Microsoft)** in the account type.
-- Add the Url ```http://<site-name>.azurewebsites.net/.auth/login/aad/callback``` as one of the **Redirect URI**. Make sure to replace ```<site-name>``` with your backend API web app name.
+- Add the Url ```http://<site-name>.azurewebsites.net/.auth/login/aad/callback``` to the **Redirect URI**. Make sure to replace ```<site-name>``` with your backend API web app name.
 - Finish the process by registering the app.
+- Once the app has been registered, go to **View API Permissions**, make sure the app has the **delegated** **User.Read** permission for the **Microsoft Graph** API.
+- Go to **Authentcation** and enable the options to **Access tokens** and **ID tokens**. Click **Save**.
+- Go to **Expose an API** and click **Add a scope** to your app. Make sure that **Admins and users** can consent to the app scope. Choose any name, display and description to both admin and user consents. Click **Save**.
+- Go to **Certificates & secrets** and create a new secret. Make sure to copy its value once it's been created since it won't be visible after you close the tab.
+- Go to **Overview** and copy the **Application (client) ID** and the **Directory (tenant) ID**. You will need them later.
 
+## Enable App Service authentication for the backend API
+Now that you have registered the backend API app in Azure AD, it's time to configure Authentication/Authorization.
+
+- Locate the backend API in the Azure portal, go to **Authentication/Authorization**. Turn it on and change the **action to take when request is not authenticated** from **Allow Anonymous requests (no action)** to **Log in with Azure Active Directory**.
+- Click to configure **Azure Actve Directory** under **Authentication Providers**. In **Management mode** select **Advanced**. 
+- Under **Client ID** paste the app client ID that you copied before.
+- Under **Issuer Url** type ```https://sts.windows.net/<tenant-id>/```. Make sure to replace ```<tenant-id>``` with the tenant ID you copied before.
+- Under **Client secret** paste the app password you created before.
+- Under **Allowed token audiences** paste ```http://<site-name>.azurewebsites.net/.auth/login/aad/callback```. Make sure to replace ```<site-name>``` with your backend API web app name.
+- Click **OK** to go back to the previous menu.
+- Click **Save**.
+
+Now that the app service has been configured to use Azure AD, let's test it. Open your browser in private mode and go to ```http://<site-name>.azurewebsites.net/swagger/index.html```. Make sure to replace ```<site-name>``` with your backend API web app name.
