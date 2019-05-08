@@ -19,13 +19,13 @@ The [Backend API](BackendApi/) provides access to a To-Do list that gets stored 
 The [Frontend API](MultitierApi/) provides a user interface to interact with the data layer. It sends requests to the Backend API for CRUD (create, read, update, delete) operations in the To-Do list. The solution needs the environment variable ```backendurl``` to point to the Backend API Url.
 
 > [!NOTE]
-  > Both APIs have a Swagger definition that can be accessed at ```http://site-name.azurewebsites.net/swagger.index.html```.
+  > Both APIs have a Swagger definition that can be accessed at ```http://site-name.azurewebsites.net/swagger/index.html```.
 
 ## Create the web apps
 In order to create a web app on Azure you need a resource group to contain your resources and an App Service plan; the last one will determine the SKU for your web app in terms of computing resources, scalability, isolation and additional features. You can create these resources using Azure PowerShell, Azure CLI or the Azure portal, in this exercise we will be using Azure CLI. Open the file [create-app-services.ps1](Scripts/create-app-services.ps1), fill the required parameters and run it in your Azure subscription.
 
 ## Publish Backend API
-Use Visual Studio either on your local computer or the Data Science VM to open the solution by opening the file [MultitierApi.sln](MultitierApi/MultitierApi.sln). On the Solution Explorer window, right-click the BackendApi item and select ```Publish```.
+Use Visual Studio either on your local computer or the Data Science VM to open the solution by opening the file [MultitierApi.sln](MultitierApi/MultitierApi.sln). On the Solution Explorer window, right-click the **BackendApi** item and select ```Publish```.
 
 ![image](images/publish-backend-api.png)
 
@@ -41,7 +41,7 @@ After a few seconds the app will be published to your web app and it will open t
 If you were able to see the Swagger page it means your application was successfully published. The Backend API uses an in-memory DB if no MongoDB connection string was provided so it is ready to use right after creation. You can test any of the endpoints through the Swagger page, try the ```GET``` and ```PUT``` methods and see new items being added to the To-Do list.
  
 ## Publish Frontend API
-This time you will repeat almost the same steps you did for the Backend API, but before you do it you need to add the Backend API Url to the frontend API's environment variables. Go to the Azure portal and find your backend web app, you will find the Url in the Overview section. Copy the Backend Api URL.
+This time you will repeat almost the same steps you did for the Backend API, but before you do it you need to add the Backend API Url to the frontend API's environment variables. Go to the Azure portal and find your backend web app, you will find the Url in the Overview section. Copy the Backend Api **URL**.
 
 ![image](images/backend-azure-overview.png)
  
@@ -52,7 +52,7 @@ This time you have to find the frontend web app, select **Configuration** in the
 > ![NOTE]
   >At this point, the steps are almost identical to publishing the Backend API.
 
-In the Visual Studio Solution Explorer window, right-click the FrontendApi item and select ```Publish```.
+In the Visual Studio Solution Explorer window, right-click the **FrontendApi** item and select ```Publish```.
 
 ![image](images/publish-frontend-api.png)
 
