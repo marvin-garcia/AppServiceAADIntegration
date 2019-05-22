@@ -25,9 +25,6 @@ namespace BackendApi
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
-
-            if (string.IsNullOrEmpty(Configuration["ApplicationInsights:InstrumentationKey"]))
-                throw new Exception("Could not find App Insights instrumentation key.");
         }
 
         public IConfiguration Configuration { get; }
