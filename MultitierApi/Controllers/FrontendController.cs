@@ -35,8 +35,12 @@ namespace FrontendApi.Controllers
         {
             try
             {
-                var response = await _httpClient.GetStringAsync($"{_backendUrl}");
-                var items = JsonConvert.DeserializeObject<IEnumerable<TodoItem>>(response);
+                var response = await _httpClient.GetAsync($"{_backendUrl}");
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception($"GetAll failed with the status code {response.StatusCode}. Message: {response.ReasonPhrase}");
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var items = JsonConvert.DeserializeObject<IEnumerable<TodoItem>>(responseContent);
                 return items;
             }
             catch (Exception e)
@@ -50,8 +54,13 @@ namespace FrontendApi.Controllers
         {
             try
             {
-                var response = await _httpClient.GetStringAsync($"{_backendUrl}/{id}");
-                var item = JsonConvert.DeserializeObject<TodoItem>(response);
+                var response = await _httpClient.GetAsync($"{_backendUrl}/{id}");
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception($"GetAll failed with the status code {response.StatusCode}. Message: {response.ReasonPhrase}");
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                var item = JsonConvert.DeserializeObject<TodoItem>(responseContent);
 
                 return new ObjectResult(item);
             }
