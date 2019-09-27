@@ -36,7 +36,7 @@ namespace BackendApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<OkObjectResult> Get(string id)
         {
-            var response = await _httpClient.GetAsync($"{_functionUrl}/{id}");
+            var response = await _httpClient.GetAsync($"{_functionUrl}/api/{id}");
             if (!response.IsSuccessStatusCode)
                 throw new Exception($"Function.Get failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
 
