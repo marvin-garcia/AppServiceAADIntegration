@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using FrontendApi.Interfaces;
 using System.Net.Http.Headers;
+using System.Collections.Generic;
 
 namespace FrontendApi.Services
 {
@@ -92,6 +93,13 @@ namespace FrontendApi.Services
             {
                 throw new HttpRequestException();
             }
+
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> SendFormUrlEncodedAsync(string uri, Dictionary<string, string> parameters)
+        {
+            HttpResponseMessage response = await _client.PostAsync(uri, new FormUrlEncodedContent(parameters));
 
             return response;
         }

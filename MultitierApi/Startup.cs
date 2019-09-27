@@ -22,38 +22,53 @@ namespace FrontendApi
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConfiguration>(Configuration);
-            services.AddSingleton<IHttpClient, StandardHttpClient>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddMvc(); //.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            // Register the Swagger generator, defining one or more Swagger documents
-            services.AddSwaggerGen(c =>
+            try
             {
-                c.SwaggerDoc("v1", new Info { Title = "Todo Frontend API", Version = "v1" });
-            });
+                services.AddSingleton<IConfiguration>(Configuration);
+                services.AddSingleton<IHttpClient, StandardHttpClient>();
+                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                //services.AddSingleton<IAuthToken, AuthToken>();
+                services.AddMvc();
 
-            var container = new ContainerBuilder();
-            container.Populate(services);
+                // Register the Swagger generator, defining one or more Swagger documents
+                services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new Info { Title = "Todo Frontend API", Version = "v1" });
+                });
 
-            return new AutofacServiceProvider(container.Build());
+                var container = new ContainerBuilder();
+                container.Populate(services);
+
+                return new AutofacServiceProvider(container.Build());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public void Configure(IApplicationBuilder app)
         {
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
+            try
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo Frontend API V1");
-            });
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
 
-            //app.UseHttpsRedirection();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.UseMvc();
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo Frontend API V1");
+                });
+
+                //app.UseHttpsRedirection();
+                app.UseDefaultFiles();
+                app.UseStaticFiles();
+                app.UseMvc();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

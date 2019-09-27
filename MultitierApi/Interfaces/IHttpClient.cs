@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace FrontendApi.Interfaces
 {
@@ -11,5 +12,6 @@ namespace FrontendApi.Interfaces
         Task<HttpResponseMessage> PostAsync<T>(string uri, T item, string requestId = null);
         Task<HttpResponseMessage> DeleteAsync(string uri, string requestId = null);
         Task<HttpResponseMessage> PutAsync<T>(string uri, T item, string requestId = null);
+        Task<HttpResponseMessage> SendFormUrlEncodedAsync(string uri, Dictionary<string, string> parameters);
     }
 }
