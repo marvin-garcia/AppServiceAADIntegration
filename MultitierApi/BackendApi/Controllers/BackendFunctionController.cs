@@ -11,6 +11,7 @@ using Common.Interfaces;
 
 namespace BackendApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BackendFunctionController : Controller
@@ -36,11 +37,17 @@ namespace BackendApi.Controllers
             HttpContext.VerifyUserHasAnyAcceptedScope(_configuration["AzureAd:RequiredScopes"].Split(','));
             //_httpClient.SetAuthenticationHeader("Bearer", Request.Headers["X-MS-TOKEN-AAD-ACCESS-TOKEN"]);
 
+            string token = string.Empty;
+            if (Request.Headers.ContainsKey("Authorization") && Request.Headers["Authorization"][0].StartsWith("Bearer "))
+                token = Request.Headers["Authorization"][0].Substring("Bearer ".Length);
+            else
+                throw new Exception("Bearer token is empty");
+
             var accessTokenResult = _authToken.GetOnBehalfOf(
                 _configuration["AzureAd:TenantId"],
                 _configuration["AzureAd:ClientId"],
                 _configuration["AzureAd:ClientSecret"],
-                Request.Headers["X-MS-TOKEN-AAD-ID-TOKEN"],
+                token,
                 new string[] { _configuration["AzureAd:BackendFunctionScope"] }
             ).ContinueWith((r) =>
             {
@@ -50,7 +57,6 @@ namespace BackendApi.Controllers
             _httpClient.SetAuthenticationHeader("Bearer", accessTokenResult.AccessToken);
         }
 
-        [Authorize]
         [HttpGet("claim", Name = "GetClaim")]
         public async Task<OkObjectResult> GetClaim()
         {
@@ -62,7 +68,6 @@ namespace BackendApi.Controllers
             return new OkObjectResult(responseContent);
         }
 
-        [Authorize]
         [HttpGet("upn", Name = "GetUPN")]
         public async Task<OkObjectResult> GetUPN()
         {
