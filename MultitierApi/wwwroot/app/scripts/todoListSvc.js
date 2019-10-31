@@ -7,21 +7,21 @@ angular.module('todoApp')
 
     return {
         getItems : function(){
-            return $http.get(apiEndpoint + '/api/frontend');
+            return $http.get(apiEndpoint + '/api/frontendtodo');
         },
         getItem : function(id){
-            return $http.get(apiEndpoint + '/api/frontend/' + id);
+            return $http.get(apiEndpoint + '/api/frontendtodo/' + id);
         },
         postItem : function(item){
-            return $http.post(apiEndpoint + '/api/frontend', item);
+            return $http.post(apiEndpoint + '/api/frontendtodo', item);
         },
         putItem : function(item){
-            return $http.put(apiEndpoint + '/api/frontend/' + item.id, item);
+            return $http.put(apiEndpoint + '/api/frontendtodo/' + item.id, item);
         },
         deleteItem : function(id){
             return $http({
                 method: 'DELETE',
-                url: apiEndpoint + '/api/frontend/' + id
+                url: apiEndpoint + '/api/frontendtodo/' + id
             });
         }
     };
