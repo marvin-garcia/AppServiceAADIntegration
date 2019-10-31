@@ -16,7 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackendApi", "BackendApi\BackendApi.csproj", "{1C4D0414-9481-424B-9486-1E32BA29B432}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendFunctionApp", "..\BackendFunctionApp\BackendFunctionApp.csproj", "{2B01EC9F-4A0B-4C4B-A934-5C6940042FCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackendFunctionApp", "..\BackendFunctionApp\BackendFunctionApp.csproj", "{2B01EC9F-4A0B-4C4B-A934-5C6940042FCB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Identity.Web", "..\Microsoft.Identity.Web\Microsoft.Identity.Web.csproj", "{1BD43984-25C7-445C-BB7C-E87D29B07533}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 		{2B01EC9F-4A0B-4C4B-A934-5C6940042FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B01EC9F-4A0B-4C4B-A934-5C6940042FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B01EC9F-4A0B-4C4B-A934-5C6940042FCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BD43984-25C7-445C-BB7C-E87D29B07533}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BD43984-25C7-445C-BB7C-E87D29B07533}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BD43984-25C7-445C-BB7C-E87D29B07533}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BD43984-25C7-445C-BB7C-E87D29B07533}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

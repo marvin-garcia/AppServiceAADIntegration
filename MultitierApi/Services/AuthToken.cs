@@ -1,4 +1,7 @@
 ﻿using FrontendApi.Interfaces;
+using FrontendApi.Models;
+using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,38 +14,67 @@ namespace FrontendApi.Services
     public class AuthToken : IAuthToken
     {
         private IHttpClient _httpClient;
+        private TelemetryClient _telemetryClient;
 
-        public AuthToken(IHttpClient httpClient)
+        public AuthToken(IHttpClient httpClient, TelemetryClient telemetryClient)
         {
             _httpClient = httpClient;
+            _telemetryClient = telemetryClient;
         }
 
-        public async Task<string> Get(string clientId, string tenantId, string username, string password, string scope, TokenType tokenType)
+        public async Task<AccessTokenResult> GetOnBehalfOf(string tenantId, string clientId, string clientSecret, string accessToken, string[] scopes)
         {
+            if (string.IsNullOrEmpty(tenantId))
+                throw new Exception("Tenant Id cannot be empty");
+
+            if (string.IsNullOrEmpty(clientId))
+                throw new Exception("Client Id cannot be empty");
+
+            if (string.IsNullOrEmpty(clientSecret))
+                throw new Exception("Client secret cannot be empty");
+
+            if (string.IsNullOrEmpty(scopes[0]))
+                throw new Exception("Scope cannot be empty");
+
+            if (string.IsNullOrEmpty(accessToken))
+                throw new Exception("Access token cannot be empty");
+
+            string url = string.Empty;
             try
             {
-                string url = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token";
+                url = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token";
 
-                string scopeOpt  = tokenType == TokenType.Id ? "openid" : "user.read,openid";
                 var parameters = new Dictionary<string, string>();
-                parameters.Add("tenant", tenantId);
+                parameters.Add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer");
                 parameters.Add("client_id", clientId);
-                parameters.Add("gran_type", "password");
-                parameters.Add("username", username);
-                parameters.Add("password", password);
-                parameters.Add("scope", scopeOpt);
+                parameters.Add("client_secret", clientSecret);
+                parameters.Add("assertion", accessToken);
+                parameters.Add("scope", string.Join(' ', scopes));
+                parameters.Add("requested_token_use", "on_behalf_of");
 
                 var response = await _httpClient.SendFormUrlEncodedAsync(url, parameters);
-                var responseContent = await response.Content.ReadAsStringAsync();
-                dynamic content = JsonConvert.DeserializeObject(responseContent);
 
-                if (tokenType == TokenType.Id)
-                    return content.id_token;
-                else
-                    return content.access_token;
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception($"Token on behalf of the user failed with status {response.StatusCode}. Message: {response.ReasonPhrase}");
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var accessTokenResult = JsonConvert.DeserializeObject<AccessTokenResult>(responseContent);
+
+                return accessTokenResult;
             }
             catch (Exception e)
             {
+                _telemetryClient.TrackEvent(
+                    "AuthToken.GetOnBehalfOf",
+                    new Dictionary<string, string>()
+                    {
+                        { "clientId", clientId },
+                        { "clientSecret", clientSecret },
+                        { "accessToken", accessToken },
+                        { "scopes", string.Join(' ', scopes) },
+                        { "url", url },
+                    });
+
                 throw e;
             }
         }

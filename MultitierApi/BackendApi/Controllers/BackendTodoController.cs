@@ -1,21 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BackendApi.Interfaces;
 using BackendApi.Models;
+using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Web.Resource;
 
 namespace BackendApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
-    [ApiController]
-    public class TodoController : Controller
+    //[ApiController]
+    public class BackendTodoController : Controller
     {
+        private IConfiguration _configuration;
+        private TelemetryClient _telemetryClient;
         private readonly IDbContext _dbContext;
+        private Claim _claim;
 
-        public TodoController(IDbContext dbRepository)
+        public BackendTodoController(IDbContext dbRepository, IConfiguration configuration, TelemetryClient telemetryClient)
         {
             try
             {
@@ -26,11 +36,21 @@ namespace BackendApi.Controllers
                         Name = "Item1",
                         IsComplete = false,
                     });
+
+                _configuration = configuration;
+                _telemetryClient = telemetryClient;
             }
             catch (Exception e)
             {
                 throw e;
             }
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
+            HttpContext.VerifyUserHasAnyAcceptedScope(_configuration["AzureAd:RequiredScopes"].Split(','));
+            _claim = User.FindFirst(ClaimTypes.NameIdentifier);
         }
 
         [HttpGet]

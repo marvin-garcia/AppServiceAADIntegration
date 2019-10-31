@@ -13,21 +13,38 @@ namespace FrontendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FrontendController : Controller
+    public class FrontendTodoController : Controller
     {
+        private IAuthToken _authToken;
         private IHttpClient _httpClient;
+        private IConfiguration _configuration;
         private string _backendUrl;
 
-        public FrontendController(IConfiguration configuration, IHttpClient httpClient)
+        public FrontendTodoController(IConfiguration configuration, IHttpClient httpClient, IAuthToken authToken)
         {
+            _authToken = authToken;
             _httpClient = httpClient;
-            _backendUrl = $"{configuration["backendurl"]}/api/todo";
+            _configuration = configuration;
+            _backendUrl = $"{configuration["backendurl"]}/api/BackendTodo";
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
-            _httpClient.SetAuthenticationHeader("Bearer", Request.Headers["X-MS-TOKEN-AAD-ACCESS-TOKEN"]);
+            //_httpClient.SetAuthenticationHeader("Bearer", Request.Headers["X-MS-TOKEN-AAD-ACCESS-TOKEN"]);
+
+            var accessTokenResult = _authToken.GetOnBehalfOf(
+                _configuration["AzureAd:TenantId"],
+                _configuration["AzureAd:FrontendClientId"],
+                _configuration["AzureAd:FrontendClientSecret"],
+                Request.Headers["X-MS-TOKEN-AAD-ID-TOKEN"],
+                new string[] { _configuration["AzureAd:BackendScope"] }
+            ).ContinueWith((r) =>
+            {
+                return r.Result;
+            }).Result;
+
+            _httpClient.SetAuthenticationHeader("Bearer", accessTokenResult.AccessToken);
         }
 
         [HttpGet]

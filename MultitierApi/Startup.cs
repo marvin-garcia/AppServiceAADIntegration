@@ -24,11 +24,18 @@ namespace FrontendApi
         {
             try
             {
-                services.AddSingleton<IConfiguration>(Configuration);
-                services.AddSingleton<IHttpClient, StandardHttpClient>();
-                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                //services.AddSingleton<IAuthToken, AuthToken>();
-                services.AddMvc();
+                var appiInsightsOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+                // Disables adaptive sampling
+                appiInsightsOptions.EnableAdaptiveSampling = false;
+                // Disables QuickPulse (Live Metrics stream)
+                appiInsightsOptions.EnableQuickPulseMetricStream = false;
+
+                services.AddSingleton<IConfiguration>(Configuration)
+                    .AddSingleton<IHttpClient, StandardHttpClient>()
+                    .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+                    .AddSingleton<IAuthToken, AuthToken>()
+                    .AddApplicationInsightsTelemetry(appiInsightsOptions)
+                    .AddMvc();
 
                 // Register the Swagger generator, defining one or more Swagger documents
                 services.AddSwaggerGen(c =>

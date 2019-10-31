@@ -1,16 +1,16 @@
 ﻿using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using BackendApi.Models;
 using BackendApi.Interfaces;
 using BackendApi.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace BackendApi
 {
@@ -32,7 +32,16 @@ namespace BackendApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            var appiInsightsOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+            // Disables adaptive sampling
+            appiInsightsOptions.EnableAdaptiveSampling = false;
+            // Disables QuickPulse (Live Metrics stream)
+            appiInsightsOptions.EnableQuickPulseMetricStream = false;
+
             services.AddSingleton<IConfiguration>(Configuration);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddApplicationInsightsTelemetry(appiInsightsOptions);
+            services.AddProtectedWebApi(Configuration);
 
             // Choose either MongoDB or in-memory DB based on whether the connection string exists in the app settings
             string mongoConnectionString = Configuration["mongodb"];
@@ -42,6 +51,8 @@ namespace BackendApi
             {
                 var optionsBuilder = new DbContextOptionsBuilder<InMemoryDbRepository>();
                 optionsBuilder.UseInMemoryDatabase("TodoList");
+                optionsBuilder.EnableSensitiveDataLogging();
+                optionsBuilder.EnableDetailedErrors();
                 var dbContext = new InMemoryDbRepository(optionsBuilder.Options);
 
                 services.AddSingleton<IDbContext>(dbContext);
@@ -52,8 +63,6 @@ namespace BackendApi
                 services.AddSingleton<IDbContext>(new MongoDbRepository(Configuration));
             }
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -78,6 +87,12 @@ namespace BackendApi
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseMvc();
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -86,11 +101,6 @@ namespace BackendApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo Backend API V1");
             });
-
-            //app.UseHttpsRedirection();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.UseMvc();
         }
     }
 }
