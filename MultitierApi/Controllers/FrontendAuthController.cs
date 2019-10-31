@@ -1,10 +1,10 @@
-﻿using FrontendApi.Interfaces;
-using FrontendApi.Models;
-using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Configuration;
+using Common.Models;
+using Common.Interfaces;
 
 namespace FrontendApi.Controllers
 {

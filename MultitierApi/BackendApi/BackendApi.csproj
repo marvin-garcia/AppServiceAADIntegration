@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj" />
     <ProjectReference Include="..\..\Microsoft.Identity.Web\Microsoft.Identity.Web.csproj" />
   </ItemGroup>
 

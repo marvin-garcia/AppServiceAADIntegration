@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace FrontendApi.Models
+namespace Common.Models
 {
     public class TodoItem
     {

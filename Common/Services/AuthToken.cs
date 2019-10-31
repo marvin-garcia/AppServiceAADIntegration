@@ -1,5 +1,5 @@
-﻿using FrontendApi.Interfaces;
-using FrontendApi.Models;
+﻿using Common.Interfaces;
+using Common.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace FrontendApi.Services
+namespace Common.Services
 {
     public class AuthToken : IAuthToken
     {

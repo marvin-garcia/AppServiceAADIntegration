@@ -17,13 +17,12 @@ namespace BackendApi.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    //[ApiController]
+    [ApiController]
     public class BackendTodoController : Controller
     {
         private IConfiguration _configuration;
         private TelemetryClient _telemetryClient;
         private readonly IDbContext _dbContext;
-        private Claim _claim;
 
         public BackendTodoController(IDbContext dbRepository, IConfiguration configuration, TelemetryClient telemetryClient)
         {
@@ -50,7 +49,6 @@ namespace BackendApi.Controllers
         {
             base.OnActionExecuting(context);
             HttpContext.VerifyUserHasAnyAcceptedScope(_configuration["AzureAd:RequiredScopes"].Split(','));
-            _claim = User.FindFirst(ClaimTypes.NameIdentifier);
         }
 
         [HttpGet]

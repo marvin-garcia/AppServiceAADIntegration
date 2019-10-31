@@ -1,8 +1,7 @@
-﻿using FrontendApi.Models;
-using Microsoft.Extensions.Configuration;
+﻿using Common.Models;
 using System.Threading.Tasks;
 
-namespace FrontendApi.Interfaces
+namespace Common.Interfaces
 {
     public interface IAuthToken
     {

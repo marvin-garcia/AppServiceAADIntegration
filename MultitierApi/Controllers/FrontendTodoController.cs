@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FrontendApi.Interfaces;
-using FrontendApi.Models;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Common.Models;
+using Common.Interfaces;
+using Microsoft.ApplicationInsights;
 
 namespace FrontendApi.Controllers
 {
@@ -19,13 +20,15 @@ namespace FrontendApi.Controllers
         private IHttpClient _httpClient;
         private IConfiguration _configuration;
         private string _backendUrl;
+        private TelemetryClient _telemetryClient;
 
-        public FrontendTodoController(IConfiguration configuration, IHttpClient httpClient, IAuthToken authToken)
+        public FrontendTodoController(IConfiguration configuration, IHttpClient httpClient, IAuthToken authToken, TelemetryClient telemetryClient)
         {
             _authToken = authToken;
             _httpClient = httpClient;
             _configuration = configuration;
             _backendUrl = $"{configuration["backendurl"]}/api/BackendTodo";
+            _telemetryClient = telemetryClient;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

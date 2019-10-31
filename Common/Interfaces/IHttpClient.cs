@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace FrontendApi.Interfaces
+namespace Common.Interfaces
 {
     public interface IHttpClient
     {

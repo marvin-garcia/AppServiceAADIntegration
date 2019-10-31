@@ -3,13 +3,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using FrontendApi.Interfaces;
+using Common.Interfaces;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
-namespace FrontendApi.Services
+namespace Common.Services
 {
     public class StandardHttpClient : IHttpClient
     {
