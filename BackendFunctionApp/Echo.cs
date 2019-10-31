@@ -10,15 +10,15 @@ using Newtonsoft.Json;
 
 namespace BackendFunctionApp
 {
-    public static class Functions
+    public static class Echo
     {
-        [FunctionName("Functions")]
-        public static string Echo(
+        [FunctionName("Echo")]
+        public static string Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "echo/{message}")] HttpRequest req,
             string message,
             ILogger log)
         {
-            return $"echo '{message}'";
+            return $"Backend function echo response: '{message}'";
         }
     }
 }
