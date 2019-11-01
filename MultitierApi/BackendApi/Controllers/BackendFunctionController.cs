@@ -41,7 +41,7 @@ namespace BackendApi.Controllers
             if (Request.Headers.ContainsKey("Authorization") && Request.Headers["Authorization"][0].StartsWith("Bearer "))
                 token = Request.Headers["Authorization"][0].Substring("Bearer ".Length);
             else
-                throw new Exception("Bearer token is empty");
+                throw new ArgumentNullException("Bearer token");
 
             var accessTokenResult = _authToken.GetOnBehalfOf(
                 _configuration["AzureAd:TenantId"],

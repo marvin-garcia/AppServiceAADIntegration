@@ -25,19 +25,19 @@ namespace Common.Services
         public async Task<AccessTokenResult> GetOnBehalfOf(string tenantId, string clientId, string clientSecret, string accessToken, string[] scopes)
         {
             if (string.IsNullOrEmpty(tenantId))
-                throw new Exception("Tenant Id cannot be empty");
+                throw new ArgumentNullException("Tenant ID");
 
             if (string.IsNullOrEmpty(clientId))
-                throw new Exception("Client Id cannot be empty");
+                throw new ArgumentNullException("Client Id");
 
             if (string.IsNullOrEmpty(clientSecret))
-                throw new Exception("Client secret cannot be empty");
+                throw new ArgumentNullException("Client secret");
 
             if (string.IsNullOrEmpty(scopes[0]))
-                throw new Exception("Scope cannot be empty");
+                throw new ArgumentNullException("Scopes");
 
             if (string.IsNullOrEmpty(accessToken))
-                throw new Exception("Access token cannot be empty");
+                throw new ArgumentNullException("Access token");
 
             string url = string.Empty;
             try
