@@ -38,8 +38,8 @@ namespace FrontendApi.Controllers
 
             var accessTokenResult = _authToken.GetOnBehalfOf(
                 _configuration["AzureAd:TenantId"],
-                _configuration["AzureAd:FrontendClientId"],
-                _configuration["AzureAd:FrontendClientSecret"],
+                _configuration["AzureAd:ClientId"],
+                _configuration["AzureAd:ClientSecret"],
                 Request.Headers["X-MS-TOKEN-AAD-ID-TOKEN"],
                 new string[] { _configuration["AzureAd:BackendScope"] }
             ).ContinueWith((r) =>

@@ -31,8 +31,8 @@ namespace FrontendApi.Controllers
 
             var accessTokenResult = _authToken.GetOnBehalfOf(
                 _configuration["AzureAd:TenantId"],
-                _configuration["AzureAd:FrontendClientId"],
-                _configuration["AzureAd:FrontendClientSecret"],
+                _configuration["AzureAd:ClientId"],
+                _configuration["AzureAd:ClientSecret"],
                 Request.Headers["X-MS-TOKEN-AAD-ID-TOKEN"],
                 new string[] { _configuration["AzureAd:BackendScope"] }
             ).ContinueWith((r) =>
@@ -43,10 +43,10 @@ namespace FrontendApi.Controllers
             _httpClient.SetAuthenticationHeader("Bearer", accessTokenResult.AccessToken);
         }
 
-        [HttpGet("claim", Name = "GetClaim")]
-        public async Task<OkObjectResult> GetClaim()
+        [HttpGet("userclaim", Name = "GetUserClaim")]
+        public async Task<OkObjectResult> GetUserClaim()
         {
-            var response = await _httpClient.GetAsync($"{_backendUrl}/claim");
+            var response = await _httpClient.GetAsync($"{_backendUrl}/userclaim");
             if (!response.IsSuccessStatusCode)
                 throw new Exception($"Function.GetClaim failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
 
@@ -54,10 +54,10 @@ namespace FrontendApi.Controllers
             return new OkObjectResult(responseContent);
         }
 
-        [HttpGet("upn", Name = "GetUPN")]
-        public async Task<OkObjectResult> GetUPN()
+        [HttpGet("serviceclaim", Name = "GetServiceClaim")]
+        public async Task<OkObjectResult> GetServiceClaim()
         {
-            var response = await _httpClient.GetAsync($"{_backendUrl}/upn");
+            var response = await _httpClient.GetAsync($"{_backendUrl}/serviceclaim");
             if (!response.IsSuccessStatusCode)
                 throw new Exception($"Function.GetUPN failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
 
