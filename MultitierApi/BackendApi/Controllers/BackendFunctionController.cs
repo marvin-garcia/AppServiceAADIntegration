@@ -57,10 +57,10 @@ namespace BackendApi.Controllers
             _httpClient.SetAuthenticationHeader("Bearer", accessTokenResult.AccessToken);
         }
 
-        [HttpGet("claim", Name = "GetClaim")]
-        public async Task<OkObjectResult> GetClaim()
+        [HttpGet("userclaim", Name = "GetUserClaim")]
+        public async Task<OkObjectResult> GetUserClaim()
         {
-            var response = await _httpClient.GetAsync($"{_functionUrl}/api/claim");
+            var response = await _httpClient.GetAsync($"{_functionUrl}/api/userclaim");
             if (!response.IsSuccessStatusCode)
                 throw new Exception($"Function.GetClaim failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
 
@@ -68,10 +68,10 @@ namespace BackendApi.Controllers
             return new OkObjectResult(responseContent);
         }
 
-        [HttpGet("upn", Name = "GetUPN")]
-        public async Task<OkObjectResult> GetUPN()
+        [HttpGet("serviceclaim", Name = "GetServiceClaim")]
+        public async Task<OkObjectResult> GetServiceClaim()
         {
-            var response = await _httpClient.GetAsync($"{_functionUrl}/api/upn");
+            var response = await _httpClient.GetAsync($"{_functionUrl}/api/serviceclaim");
             if (!response.IsSuccessStatusCode)
                 throw new Exception($"Function.GetUPN failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
 
