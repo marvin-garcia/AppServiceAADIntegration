@@ -1,0 +1,75 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptions_5d79d2399de6a80082070001_displayName": {
+            "value": null
+        },
+        "subscriptions_5d79d23a9de6a80082070002_displayName": {
+            "value": null
+        },
+        "users_1_lastName": {
+            "value": null
+        },
+        "sites_backendappsvc_name": {
+            "value": null
+        },
+        "sites_frontentappsvc_name": {
+            "value": null
+        },
+        "hostingEnvironments_ase_name": {
+            "value": null
+        },
+        "sites_backendfunctionapp_name": {
+            "value": null
+        },
+        "virtualMachines_Jumpbox_name": {
+            "value": null
+        },
+        "serverfarms_AuthN_AuthZ_Plan_name": {
+            "value": null
+        },
+        "service_authn_authz_name": {
+            "value": null
+        },
+        "networkInterfaces_jumpbox476_name": {
+            "value": null
+        },
+        "publicIPAddresses_Jumpbox_ip_name": {
+            "value": null
+        },
+        "components_AuthN_AuthZ_Insights_name": {
+            "value": null
+        },
+        "privateDnsZones_marvingarcia.xyz_name": {
+            "value": null
+        },
+        "virtualNetworks_AuthN_AuthZ_Vnet_name": {
+            "value": null
+        },
+        "networkSecurityGroups_Jumpbox_nsg_name": {
+            "value": null
+        },
+        "publicIPAddresses_AuthN_AuthZ_IP_V2_name": {
+            "value": null
+        },
+        "storageAccounts_backendfunctiona03c_name": {
+            "value": null
+        },
+        "applicationGateways_AuthN_AuthZ_Gateway_V2_name": {
+            "value": null
+        },
+        "privateDnsZones_ase.appserviceenvironment.net_name": {
+            "value": null
+        },
+        "userAssignedIdentities_ManagedIdentity_name": {
+            "value": null
+        },
+        "certificates_MarvinGarciaXyz_AuthN_AuthZ_RG_aseappseSouthCentralUSwebspace_name": {
+            "value": null
+        },
+        "vaults_marvkeyvault_externalid": {
+            "value": null
+        }
+    }
+}
