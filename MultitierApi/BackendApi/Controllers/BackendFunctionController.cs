@@ -62,7 +62,7 @@ namespace BackendApi.Controllers
         {
             var response = await _httpClient.GetAsync($"{_functionUrl}/api/userclaim");
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Function.GetClaim failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
+                throw new Exception($"Function.GetUserClaim failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
 
             var responseContent = await response.Content.ReadAsStringAsync();
             return new OkObjectResult(responseContent);
@@ -73,7 +73,7 @@ namespace BackendApi.Controllers
         {
             var response = await _httpClient.GetAsync($"{_functionUrl}/api/serviceclaim");
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Function.GetUPN failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
+                throw new Exception($"Function.GetService failed with status code {response.StatusCode}. Message: {response.ReasonPhrase}");
 
             var responseContent = await response.Content.ReadAsStringAsync();
             return new OkObjectResult(responseContent);
