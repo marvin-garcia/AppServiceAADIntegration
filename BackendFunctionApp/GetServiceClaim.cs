@@ -19,7 +19,7 @@ namespace BackendFunctionApp
         private static string _tenantId;
         private static string _clientId;
         private static string _aadInstance;
-        private static string[] _requiredScopes = new string[] { "access_as_service" };
+        private static string[] _requiredScopes = new string[] { "access_as_application" };
 
         [FunctionName("GetServiceClaim")]
         public static async Task<string> Run(

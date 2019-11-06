@@ -83,7 +83,7 @@ namespace BackendFunctionApp.Services
 
                 // This check is required to ensure that the Web API only accepts tokens from tenants where it has been consented to and provisioned.
                 if (!claimsPrincipal.Claims.Any(x => x.Type == ClaimConstants.ScopeClaimType)
-                   && !claimsPrincipal.Claims.Any(y => y.Type == ClaimConstants.RolesClaimType))
+                   && !claimsPrincipal.Claims.Any(y => y.Type == ClaimConstants.RoleClaimType))
                 {
                     request.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     throw new Exception("Forbidden: Neither 'scope' or 'roles' claim was found in the bearer token.");
@@ -97,7 +97,9 @@ namespace BackendFunctionApp.Services
                     request.HttpContext.User = claimsPrincipal;
 
                 // If the token is scoped, verify that required permission is set in the scope claim. This could be done later at the controller level as well
-                Claim scopeClaim = request.HttpContext.User?.FindFirst("http://schemas.microsoft.com/identity/claims/scope");
+                Claim scopeClaim = request.HttpContext.User?.FindFirst(ClaimConstants.ScopeClaimType);
+                if (scopeClaim == null)
+                    scopeClaim = request.HttpContext.User?.FindFirst(ClaimConstants.RoleClaimType);
 
                 if (scopeClaim == null || !scopeClaim.Value.Split(' ').Intersect(acceptedScopes).Any())
                 {
