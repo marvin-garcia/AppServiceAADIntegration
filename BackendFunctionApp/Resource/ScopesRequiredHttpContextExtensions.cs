@@ -97,14 +97,14 @@ namespace BackendFunctionApp.Services
                     request.HttpContext.User = claimsPrincipal;
 
                 // If the token is scoped, verify that required permission is set in the scope claim. This could be done later at the controller level as well
-                Claim scopeClaim = request.HttpContext.User?.FindFirst(ClaimConstants.ScopeClaimType);
-                if (scopeClaim == null)
-                    scopeClaim = request.HttpContext.User?.FindFirst(ClaimConstants.RoleClaimType);
+                IEnumerable<Claim> scopeClaims = request.HttpContext.User?.FindAll(ClaimConstants.ScopeClaimType);
+                if (scopeClaims == null || scopeClaims.Count() == 0)
+                    scopeClaims = request.HttpContext.User?.FindAll(ClaimConstants.RoleClaimType);
 
-                if (scopeClaim == null || !scopeClaim.Value.Split(' ').Intersect(acceptedScopes).Any())
+                if (scopeClaims == null || scopeClaims.Where(c => c.Value.Split(' ').Intersect(acceptedScopes).Any()).Count() == 0)
                 {
                     request.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    string scopeClaimValue = scopeClaim == null ? null : scopeClaim.Value;
+                    string scopeClaimValue = scopeClaims == null ? null : string.Join(", ", scopeClaims.Select(c => c.Value));
                     string message = $"The 'scope' claim does not contain scopes '{string.Join(",", acceptedScopes)}' or was not found. Supported scopes are: {scopeClaimValue}";
                     throw new HttpRequestException(message);
                 }
